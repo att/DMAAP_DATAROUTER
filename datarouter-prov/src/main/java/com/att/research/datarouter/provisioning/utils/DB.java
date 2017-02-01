@@ -57,6 +57,9 @@ public class DB {
 	private static Logger intlogger = Logger.getLogger("com.att.research.datarouter.provisioning.internal");
 	private static Queue<Connection> queue = new LinkedList<Connection>();
 
+	public static String HTTPS_PORT;
+	public static String HTTP_PORT;
+
 	/**
 	 * Construct a DB object.  If this is the very first creation of this object, it will load a copy
 	 * of the properties for the server, and attempt to load the JDBC driver for the database.  If a fatal
@@ -72,6 +75,8 @@ public class DB {
 				DB_URL      = (String) props.get("com.att.research.datarouter.db.url");
 				DB_LOGIN    = (String) props.get("com.att.research.datarouter.db.login");
 				DB_PASSWORD = (String) props.get("com.att.research.datarouter.db.password");
+				HTTPS_PORT = (String) props.get("com.att.research.datarouter.provserver.https.port");
+				HTTP_PORT = (String) props.get("com.att.research.datarouter.provserver.http.port");
 				Class.forName(DB_DRIVER);
 			} catch (IOException e) {
 				intlogger.fatal("PROV9003 Opening properties: "+e.getMessage());

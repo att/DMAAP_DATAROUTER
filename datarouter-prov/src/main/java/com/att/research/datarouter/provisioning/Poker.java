@@ -11,7 +11,9 @@
 
 package com.att.research.datarouter.provisioning;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -20,10 +22,13 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
+
+import javax.servlet.ServletException;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -37,6 +42,7 @@ import com.att.research.datarouter.provisioning.beans.NetworkRoute;
 import com.att.research.datarouter.provisioning.beans.Parameters;
 import com.att.research.datarouter.provisioning.beans.Subscription;
 import com.att.research.datarouter.provisioning.beans.Group; //Groups feature Rally:US708115 - 1610	
+import com.att.research.datarouter.provisioning.utils.*;
 
 /**
  * This class handles the two timers (described in R1 Design Notes), and takes care of issuing
@@ -48,6 +54,9 @@ import com.att.research.datarouter.provisioning.beans.Group; //Groups feature Ra
 public class Poker extends TimerTask {
 	/** Template used to generate the URL to issue the GET against */
 	public static final String POKE_URL_TEMPLATE = "http://%s/internal/fetchProv";
+	
+	
+	
 
 	/** This is a singleton -- there is only one Poker object in the server */
 	private static Poker p;
@@ -98,6 +107,8 @@ public class Poker extends TimerTask {
 		}
 		if (logger.isDebugEnabled())
 			logger.debug("Poker timers set to " + timer1 + " and " + timer2);
+	
+		
 	}
 
 	/**
@@ -154,8 +165,9 @@ public class Poker extends TimerTask {
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
+			
 				try {
-					String u = String.format(POKE_URL_TEMPLATE, nodename+":8080");
+					String u = String.format(POKE_URL_TEMPLATE, nodename+":"+DB.HTTP_PORT);
 					URL url = new URL(u);
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 					conn.setConnectTimeout(60000);	//Fixes for Itrack DATARTR-3, poke timeout

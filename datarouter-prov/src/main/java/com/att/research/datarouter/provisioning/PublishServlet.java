@@ -12,9 +12,11 @@
 package com.att.research.datarouter.provisioning;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -31,6 +33,7 @@ import com.att.research.datarouter.provisioning.beans.EventLogRecord;
 import com.att.research.datarouter.provisioning.beans.Feed;
 import com.att.research.datarouter.provisioning.beans.IngressRoute;
 import com.att.research.datarouter.provisioning.eelf.EelfMsgs;
+import com.att.research.datarouter.provisioning.utils.*;
 
 /**
  * This servlet handles redirects for the &lt;publishURL&gt; on the provisioning server,
@@ -48,6 +51,7 @@ public class PublishServlet extends BaseServlet {
 	private List<IngressRoute> irt;
 	//Adding EELF Logger Rally:US664892  
     private static EELFLogger eelflogger = EELFManager.getInstance().getLogger("com.att.research.datarouter.provisioning.PublishServlet");
+    
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -55,6 +59,7 @@ public class PublishServlet extends BaseServlet {
 		next_node = 0;
 		provstring = "";
 		irt = new ArrayList<IngressRoute>();
+	
 	}
 	@Override
 	public void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -99,7 +104,7 @@ public class PublishServlet extends BaseServlet {
 			} else {
 				// Generate new URL
 				String nextnode = getRedirectNode(feedid, req);
-				nextnode = nextnode+":8443";
+				nextnode = nextnode+":"+DB.HTTPS_PORT;
 				String newurl = "https://" + nextnode + "/publish" + req.getPathInfo();
 				String qs = req.getQueryString();
 				if (qs != null)
