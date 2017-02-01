@@ -6,6 +6,12 @@ The Data Routing System project is intended to provide a common framework by whi
 The delivery of data from these kinds of production systems is the domain of the Data Routing System. Its primary goal is to make it easier to move data from existing applications that may not have been designed from the ground up to share data.
 The Data Routing System is different from many existing platforms for distributing messages from producers to consumers which focus on real-time delivery of small messages (on the order of a few kilobytes or so) for more
 
+   Provisioning is implemented as a Java servlet running under Jetty in one JVM
+   Provisioning data is stored in a MySQL database
+   The backup provisioning server and each node is informed any time provisioning data changes
+   The backup provisioning server and each node may request the complete set of provisioning data at any time
+   A Node is implemented as a Java servlet running under Jetty in one JVM
+
 Assumptions
     For 95% of all feeds (there will be some exceptions):
     Number of Publishing Endpoints per Feed: 1 – 10
