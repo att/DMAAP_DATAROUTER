@@ -27,7 +27,6 @@ Assumptions
 	
     with a distribution towards the high end
 	
-
     Frequency of Publishing: 1/day – 10/minute
 	
     Lifetime of a Feed: months to years
