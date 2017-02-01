@@ -7,7 +7,7 @@ services:
     ports:
      - "8443:8443"
      - "8080:8080"  
-    volumes:
+#    volumes:
 #     - ./prov_data/proserver.properties:/opt/app/datartr/etc/proserver.properties
 #     - ./prov_data/datarouter-prov-jar-with-dependencies.jar:/opt/app/datartr/lib/datarouter-prov-jar-with-dependencies.jar
 #      - ./prov_data/addSubscriber.txt:/opt/app/datartr/addSubscriber.txt
@@ -26,8 +26,8 @@ services:
     ports:
      - "9443:8443"
      - "9090:8080"
-    volumes:
-     - ./node_data/node.properties:/opt/app/datartr/etc/node.properties
+#    volumes:
+#     - ./node_data/node.properties:/opt/app/datartr/etc/node.properties
     entrypoint: ["bash", "-c", "sleep 15; /bin/sh -c ./startup.sh"]    
     depends_on:
       - datarouter-prov
