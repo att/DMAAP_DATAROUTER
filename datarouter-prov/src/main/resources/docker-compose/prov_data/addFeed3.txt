@@ -1,0 +1,22 @@
+{
+     "name": "Jettydemo",
+     "version": "m1.0",
+     "description": "Jettydemo",
+     "business_description": "Jettydemo",
+     "suspend": false,
+     "deleted": false,
+     "changeowner": true,
+     "authorization": {
+          "classification": "unclassified",
+          "endpoint_addrs": [
+               "172.18.0.3",
+			],
+          "endpoint_ids": [
+               {
+                    "password": "rs873m",
+                    "id": "rs873m"
+               }
+          ]
+     },
+}
+

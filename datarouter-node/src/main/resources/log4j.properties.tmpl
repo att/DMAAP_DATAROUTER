@@ -1,0 +1,11 @@
+cat <<!EOF
+log4j.debug=FALSE
+log4j.rootLogger=INFO,Root
+
+log4j.appender.Root=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.Root.file=C:/Users/sg481n/node.log
+log4j.appender.Root.datePattern='.'yyyyMMdd
+log4j.appender.Root.append=true
+log4j.appender.Root.layout=org.apache.log4j.PatternLayout
+log4j.appender.Root.layout.ConversionPattern=%d %p %m%n
+!EOF

@@ -1,0 +1,78 @@
+Package notes for com.att.dmaap.datarouter:prov
+
+This component is for the Data Router Provisioning Server software.
+
+The following pre-requisite components should already be present:
+	com.att.aft.swm:swm-cli
+	com.att.aft.swm:swm-node
+	- SWM Variables: AFTSWM_AUTOLINK_PARENTS=/opt/app:/opt/app/workload,/opt/app/aft:/opt/app/workload/aft
+	com.att.platform:uam-auto
+	com.att.java:jdk8lin
+	com.att.platform:initd
+	com.att.platform:port-fwd
+	- SWM Variables: PLATFORM_PORT_FWD=80,8080|443,8443
+	mysql:mysql
+	mysql:mysql-config
+	- SWM Variables: MYSQL_CONFIG_SIZE=small
+		MYSQL_DB_DATABASES=datarouter
+		MYSQL_DB_datarouter_USERS=datarouter,tier2
+		MYSQL_DB_datarouter_USERS_datarouter_LEVEL=RW
+		MYSQL_DB_datarouter_USERS_datarouter_PASSWORD=datarouter
+		MYSQL_DB_datarouter_USERS_tier2_LEVEL=RO
+		MYSQL_DB_datarouter_USERS_tier2_PASSWORD=<password>
+		MYSQL_MAX_ALLOWED_PACKET=32M
+		MYSQL_MAX_CONNECTIONS=300
+		MYSQL_PASSWORD=datarouter
+		MYSQL_PORT=3306
+
+
+In a production environment, the SWM variables that MUST be overwridden are:
+	DRTR_PROV_ACTIVEPOD, DRTR_PROV_STANDBYPOD, DRTR_PROV_NODES
+In addition, in a non-production environment, the DRTR_PROV_CNAME SWM variable
+must also be overwridden.
+
+The SWM variables that can be set to control the provisioning server are:
+
+DRTR_PROV_ACTIVEPOD
+	The FQDN of the active POD
+DRTR_PROV_STANDBYPOD
+	The FQDN of the standby POD
+DRTR_PROV_CNAME (default feeds-drtr.web.att.com)
+	The DNS CNAME used for the prov server in this environment.
+DRTR_PROV_NODES
+	Pipe-delimited list of DR nodes to init the DB with.
+DRTR_PROV_DOMAIN (default web.att.com)
+	Domain to use for non-FQDN node names
+
+DRTR_PROV_INTHTTPPORT (default 8080)
+	The TCP/IP port number the component should listen on for "go fetch"
+	requests from the provisioning server
+DRTR_PROV_INTHTTPSPORT (default 8443)
+	The TCP/IP port number the component should listen on for publish
+	requests from feed publishers and other nodes
+DRTR_PROV_LOGS (default /opt/app/datartr/logs)
+	The directory where log files should be kept
+DRTR_PROV_SPOOL (default /opt/app/datartr/spool)
+	The directory where logfiles from the DR nodes are spooled before being
+	imported into the DB.
+
+DRTR_PROV_KEYMGRPASS (default changeit)
+	The password for the key manager
+DRTR_PROV_KSTOREFILE (default /opt/app/datartr/etc/keystore)
+	The java keystore file containing the server certificate and private key
+	for this server
+DRTR_PROV_KSTOREPASS (default changeit)
+	The password for the keystore file
+DRTR_PROV_TSTOREFILE (by default, use the truststore from the Java JDK)
+	The java keystore file containing the trusted certificate authority
+	certificates
+DRTR_PROV_TSTOREPASS (default changeit)
+	The password for the trust store file.  Only applies if a trust store
+	file is specified.
+
+DRTR_PROV_DBLOGIN (default datarouter)
+	The login used to access MySQL
+DRTR_PROV_DBPASS (default datarouter)
+	The password used to access MySQL
+DRTR_PROV_DBSCRIPTS (default /opt/app/datartr/etc)
+	The directory containing DB initialization scripts

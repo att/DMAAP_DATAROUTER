@@ -1,0 +1,111 @@
+<!-- CVS: $Id: package.html,v 1.4 2014/02/26 18:18:00 eby Exp $ -->
+<!--
+                       AT&T - PROPRIETARY
+          THIS FILE CONTAINS PROPRIETARY INFORMATION OF
+       AT&T AND IS NOT TO BE DISCLOSED OR USED EXCEPT IN
+                   ACCORDANCE WITH APPLICABLE AGREEMENTS.
+
+           Copyright (c) 2013 AT&T Knowledge Ventures
+               Unpublished and Not for Publication
+                      All Rights Reserved
+-->
+<html>
+<body>
+<p>
+This package provides the servlets used by the provisioning server for the Data Router application.
+URLs are from the document <b>URLs for DR Release 1</b> <i>Version 1.2</i>.
+</p>
+<div class="contentContainer">
+<table class="packageSummary" border="0" cellpadding="3" cellspacing="0">
+<caption><span>URL Path Summary</span><span class="tabEnd">&nbsp;</span></caption>
+<tr class="altColor">
+	<th class="colFirst">URL Path</th>
+	<th class="colOne">Symbolic Name</th>
+	<th class="colLast">Servlet Name</th>
+	<th class="colLast" colspan="4">Allowed Methods</th>
+</tr>
+<tr>
+	<td class="colFirst" class="colOne">/</td>
+	<td class="colOne" class="colOne">&lt;drFeedsUrl&gt;</td>
+	<td class="colLast" class="colOne">{@link com.att.research.datarouter.provisioning.DRFeedsServlet}</td>
+	<td class="colLast" class="colOne" style="background-color: pink">DELETE</td>
+	<td class="colLast" class="colOne" style="background-color: lightgreen">GET</td>
+	<td class="colLast" class="colOne" style="background-color: lightgreen">POST</td>
+	<td class="colLast" class="colOne" style="background-color: pink">PUT</td>
+</tr>
+<tr class="altColor">
+	<td class="colFirst" class="colOne">/feed/feedid</td>
+	<td class="colOne" class="colOne">&lt;feedUrl&gt;</td>
+	<td class="colLast" class="colOne">{@link com.att.research.datarouter.provisioning.FeedServlet}</td>
+	<td class="colLast" style="background-color: lightgreen">DELETE</td>
+	<td class="colLast" style="background-color: lightgreen">GET</td>
+	<td class="colLast" style="background-color: pink">POST</td>
+	<td class="colLast" style="background-color: lightgreen">PUT</td>
+</tr>
+<tr>
+	<td class="colFirst">/publish/feedid</td>
+	<td class="colOne">&lt;publishUrl&gt;</td>
+	<td class="colLast">{@link com.att.research.datarouter.provisioning.PublishServlet}</td>
+	<td class="colLast" style="background-color: lightgreen">DELETE</td>
+	<td class="colLast" style="background-color: lightgreen">GET</td>
+	<td class="colLast" style="background-color: lightgreen">POST</td>
+	<td class="colLast" style="background-color: lightgreen">PUT</td>
+</tr>
+<tr class="altColor">
+	<td class="colFirst">/subscribe/feedid</td>
+	<td class="colOne">&lt;subscribeUrl&gt;</td>
+	<td class="colLast">{@link com.att.research.datarouter.provisioning.SubscribeServlet}</td>
+	<td class="colLast" style="background-color: pink">DELETE</td>
+	<td class="colLast" style="background-color: lightgreen">GET</td>
+	<td class="colLast" style="background-color: lightgreen">POST</td>
+	<td class="colLast" style="background-color: pink">PUT</td>
+</tr>
+<tr>
+	<td class="colFirst">/feedlog/feedid</td>
+	<td class="colOne">&lt;feedLogUrl&gt;</td>
+	<td class="colLast">{@link com.att.research.datarouter.provisioning.FeedLogServlet}</td>
+	<td class="colLast" style="background-color: pink">DELETE</td>
+	<td class="colLast" style="background-color: lightgreen">GET</td>
+	<td class="colLast" style="background-color: pink">POST</td>
+	<td class="colLast" style="background-color: pink">PUT</td>
+</tr>
+<tr class="altColor">
+	<td class="colFirst">/subs/subid</td>
+	<td class="colOne">&lt;subscriptionUrl&gt;</td>
+	<td class="colLast">{@link com.att.research.datarouter.provisioning.SubscriptionServlet}</td>
+	<td class="colLast" style="background-color: lightgreen">DELETE</td>
+	<td class="colLast" style="background-color: lightgreen">GET</td>
+	<td class="colLast" style="background-color: lightgreen">POST</td>
+	<td class="colLast" style="background-color: lightgreen">PUT</td>
+</tr>
+<tr>
+	<td class="colFirst">/sublog/subid</td>
+	<td class="colOne">&lt;subLogUrl&gt;</td>
+	<td class="colLast">{@link com.att.research.datarouter.provisioning.SubLogServlet}</td>
+	<td class="colLast" style="background-color: pink">DELETE</td>
+	<td class="colLast" style="background-color: lightgreen">GET</td>
+	<td class="colLast" style="background-color: pink">POST</td>
+	<td class="colLast" style="background-color: pink">PUT</td>
+</tr>
+<tr class="altColor">
+	<td class="colFirst">/internal/*</td>
+	<td class="colOne">&lt;internalUrl&gt;</td>
+	<td class="colLast">{@link com.att.research.datarouter.provisioning.InternalServlet}</td>
+	<td class="colLast" style="background-color: lightgreen">DELETE</td>
+	<td class="colLast" style="background-color: lightgreen">GET</td>
+	<td class="colLast" style="background-color: lightgreen">POST</td>
+	<td class="colLast" style="background-color: lightgreen">PUT</td>
+</tr>
+<tr>
+	<td class="colFirst">/internal/route/*</td>
+	<td class="colOne">&lt;routeUrl&gt;</td>
+	<td class="colLast">{@link com.att.research.datarouter.provisioning.RouteServlet}</td>
+	<td class="colLast" style="background-color: lightgreen">DELETE</td>
+	<td class="colLast" style="background-color: lightgreen">GET</td>
+	<td class="colLast" style="background-color: lightgreen">POST</td>
+	<td class="colLast" style="background-color: pink">PUT</td>
+</tr>
+</table>
+</div>
+</body>
+</html>

@@ -1,0 +1,114 @@
+#!/bin/bash
+
+umask 0022
+TZ=GMT0
+export TZ
+PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/java/jdk/jdk180/bin
+export PATH
+CLASSPATH=`echo /opt/app/datartr/etc /opt/app/datartr/lib/*.jar | tr ' ' ':'` 
+export CLASSPATH
+
+pids() {
+	ps -ef | grep java | grep node.NodeMain | sed -e 's/[^ ]* *//' -e 's/ .*//'
+}
+
+start() {
+	ID=`id -n -u`
+	GRP=`id -n -g`
+	if [ "$ID" != "root" ]
+	then
+		echo drtrnode must be started as user datartr not $ID
+		exit 1
+	fi
+	if [ "$GRP" != "datartr" ]
+	then
+		echo drtrnode must be started as group datartr not $GRP
+		exit 1
+	fi
+	cd /opt/app/datartr
+	if etc/havecert
+	then
+		echo >/dev/null
+	else
+		echo No certificate file available.  Cannot start
+		exit 0
+	fi
+	PIDS=`pids`
+	if [ "$PIDS" != "" ]
+	then
+		echo drtrnode already running
+		exit 0
+	fi
+
+	mkdir -p /opt/app/datartr/spool/s
+	chmod 755 /opt/app/datartr/spool/s
+
+	rm -f /opt/app/datartr/etc/SHUTDOWN
+	nohup java com.att.research.datarouter.node.NodeMain </dev/null >/dev/null 2>&1 &
+	sleep 5
+	PIDS=`pids`
+	if [ "$PIDS" = "" ]
+	then
+		echo drtrnode startup failed
+	else
+		echo drtrnode started
+	fi
+}
+
+stop() {
+	ID=`id -n -u`
+	GRP=`id -n -g`
+	if [ "$ID" != "datartr" ]
+	then
+		echo drtrnode must be stopped as user datartr not $ID
+		exit 1
+	fi
+	if [ "$GRP" != "datartr" ]
+	then
+		echo drtrnode must be stopped as group datartr not $GRP
+		exit 1
+	fi
+	touch /opt/app/datartr/etc/SHUTDOWN
+	PIDS=`pids`
+	if [ "$PIDS" != "" ]
+	then
+		sleep 5
+		kill -9 $PIDS
+		sleep 5
+		echo drtrnode stopped
+	else
+		echo drtrnode not running
+	fi
+}
+
+status() {
+	PIDS=`pids`
+	if [ "$PIDS" != "" ]
+	then
+		echo drtrnode running
+	else
+		echo drtrnode not running
+	fi
+}
+
+case "$1" in
+'start')
+	start
+	;;
+'stop')
+	stop
+	;;
+'restart')
+	stop
+	sleep 20
+	start
+	;;
+'status')
+	status
+	;;
+*)
+	echo "Usage: $0 { start | stop | restart }"
+	exit 1
+	;;
+esac
+exit 0

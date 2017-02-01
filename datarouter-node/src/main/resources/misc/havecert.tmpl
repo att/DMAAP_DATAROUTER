@@ -1,0 +1,11 @@
+#!/bin/bash
+cat <<!EOF
+TZ=GMT0
+cd /opt/app/datartr;
+if [ -f ${DRTR_NODE_KSTOREFILE:-etc/keystore} ]
+then
+	exit 0
+fi
+echo `date '+%F %T,000'` WARN Certificate file "${DRTR_NODE_KSTOREFILE:-etc/keystore}" is missing >>${DRTR_NODE_LOGS:-logs}/node.log
+exit 1
+!EOF

@@ -1,0 +1,131 @@
+#!/bin/bash
+#
+#                        AT&T - PROPRIETARY
+#          THIS FILE CONTAINS PROPRIETARY INFORMATION OF
+#        AT&T AND IS NOT TO BE DISCLOSED OR USED EXCEPT IN
+#             ACCORDANCE WITH APPLICABLE AGREEMENTS.
+#
+#          Copyright (c) 2013 AT&T Knowledge Ventures
+#              Unpublished and Not for Publication
+#                     All Rights Reserved
+#
+#  This is the startup/shutdown script for the AT&T Data Router Provisioning Server.
+#
+#  $Id: drtrprov,v 1.3 2013/10/29 16:57:57 eby Exp $
+#
+
+umask 0022
+
+JAVA_HOME=/opt/java/jdk/jdk180
+JAVA_OPTS="-Xms2G -Xmx8G"
+TZ=GMT0
+PATH=$JAVA_HOME/bin:/bin:/usr/bin
+CLASSPATH=`echo /opt/app/datartr/etc /opt/app/datartr/lib/*.jar | tr ' ' ':'`
+export CLASSPATH JAVA_HOME JAVA_OPTS TZ PATH
+
+pids() {
+	pgrep -u datartr -f provisioning.Main
+}
+
+start() {
+	ID=`id -n -u`
+	GRP=`id -n -g`
+	if [ "$ID" != "root" ]
+	then
+		echo drtrprov must be started as user datartr not $ID
+		exit 1
+	fi
+#  if [ "$GRP" != "datartr" ]
+# 	then
+# 		echo drtrprov must be started as group datartr not $GRP
+# 		exit 1
+# 	fi  
+# 	cd /opt/app/datartr
+# 	if etc/havecert
+# 	then
+# 		echo >/dev/null
+# 	else
+# 		echo No certificate file available.  Cannot start
+# 		exit 0
+# 	fi
+	if [ "`pgrep -u mysql mysqld`" = "" ]
+	then
+		echo MySQL is not running.  It must be started before drtrprov
+		exit 0
+	fi
+	PIDS=`pids`
+	if [ "$PIDS" != "" ]
+	then
+		echo drtrprov already running
+		exit 0
+	fi
+	echo '0 1 * * * /opt/app/datartr/bin/runreports' | crontab
+	nohup java $JAVA_OPTS com.att.research.datarouter.provisioning.Main </dev/null &
+	sleep 5
+	PIDS=`pids`
+	if [ "$PIDS" = "" ]
+	then
+		echo drtrprov startup failed
+	else
+		echo drtrprov started
+	fi
+}
+
+stop() {
+	ID=`id -n -u`
+	GRP=`id -n -g`
+	if [ "$ID" != "datartr" ]
+	then
+		echo drtrprov must be stopped as user datartr not $ID
+		exit 1
+	fi
+	if [ "$GRP" != "datartr" ]
+	then
+		echo drtrprov must be stopped as group datartr not $GRP
+		exit 1
+	fi
+	/usr/bin/curl http://127.0.0.1:8080/internal/halt
+	sleep 5
+	PIDS=`pids`
+	if [ "$PIDS" != "" ]
+	then
+		sleep 5
+		kill -9 $PIDS
+		sleep 5
+		echo drtrprov stopped
+	else
+		echo drtrprov not running
+	fi
+}
+
+status() {
+	PIDS=`pids`
+	if [ "$PIDS" != "" ]
+	then
+		echo drtrprov running
+	else
+		echo drtrprov not running
+	fi
+}
+
+case "$1" in
+'start')
+	start
+	;;
+'stop')
+	stop
+	;;
+'restart')
+	stop
+	sleep 20
+	start
+	;;
+'status')
+	status
+	;;
+*)
+	echo "Usage: $0 { start | stop | restart | status }"
+	exit 1
+	;;
+esac
+exit 0

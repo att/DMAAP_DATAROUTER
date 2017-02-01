@@ -1,0 +1,56 @@
+<!--
+                       AT&T - PROPRIETARY
+          THIS FILE CONTAINS PROPRIETARY INFORMATION OF
+       AT&T AND IS NOT TO BE DISCLOSED OR USED EXCEPT IN
+                   ACCORDANCE WITH APPLICABLE AGREEMENTS.
+
+           Copyright (c) 2013 AT&T Knowledge Ventures
+               Unpublished and Not for Publication
+                      All Rights Reserved
+-->
+<!-- $Id: package.html,v 1.1.1.1 2013/04/22 16:47:09 jfl Exp $ -->
+<html>
+<head>
+</head>
+<body>
+<p>
+This package provides an implementation of the authorization-related interfaces 
+defined by the <code>com.att.research.datarouter.authz</code> package, intended for
+use with the provisioning server for Data Router Release 1.   In DR R1, we do not
+have an external policy engine, so this implementation performs the authorization
+locally.
+</p>
+<p>
+In order to perform the authorization, this package needs access to provisioning data 
+about feeds and subscriptions.  This package defines an interface
+(<code>com.att.research.datarouter.authz.impl.ProvDataProvider</code>) through which it
+expects to get this data.   The provisioning server code must provide an implementation
+of this interface.
+</p>
+<p>
+A software component that wishes to use this implementation must:
+<ul>
+<li>Provide an implementation of the 
+<code>com.att.research.datarouter.authz.impl.ProvDataProvider</code>
+interface.
+</li>
+<li>
+Create an instance of the <code>ProvDataProvider</code> implementation.
+<li>
+Create an instance of the
+<code>com.att.research.datarouter.authz.impl.ProvAuthorizer</code>
+class defined in this package, passing it an instance of the <code>ProvDataProvider</code>
+implementation.
+</li>
+</ul>
+</p>
+<p>
+Example:
+<pre>
+<code>
+ProvDataProvider dataProv = new MyDataProvider();
+Authorizer authz = new ProvAuthorizer(dataProv);
+</code>
+</pre>
+</body>
+</html>

@@ -1,0 +1,68 @@
+cat <<!EOF
+#
+#                        AT&T - PROPRIETARY
+#          THIS FILE CONTAINS PROPRIETARY INFORMATION OF
+#        AT&T AND IS NOT TO BE DISCLOSED OR USED EXCEPT IN
+#             ACCORDANCE WITH APPLICABLE AGREEMENTS.
+#
+#          Copyright (c) 2013 AT&T Knowledge Ventures
+#              Unpublished and Not for Publication
+#                     All Rights Reserved
+#
+# CVS: $Id: log4j.properties.tmpl,v 1.4 2014/01/13 19:44:57 eby Exp $
+#
+
+log4j.rootLogger=info
+
+#
+# Logger used for provisioning events
+#
+log4j.logger.com.att.research.datarouter.provisioning.events=info, eventlog
+log4j.additivity.com.att.research.datarouter.provisioning.events=false
+
+log4j.appender.eventlog=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.eventlog.file=${DRTR_PROV_LOGS:-/opt/app/datartr/logs}/provevent.log
+log4j.appender.eventlog.datePattern='.'yyyyMMdd
+log4j.appender.eventlog.append=true
+log4j.appender.eventlog.layout=org.apache.log4j.PatternLayout
+log4j.appender.eventlog.layout.ConversionPattern=%d %-5p [%t] - %m%n
+
+#
+# Logger used for internal provisioning server events
+#
+log4j.logger.com.att.research.datarouter.provisioning.internal=debug, intlog
+log4j.additivity.com.att.research.datarouter.provisioning.internal=false
+
+log4j.appender.intlog=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.intlog.file=${DRTR_PROV_LOGS:-/opt/app/datartr/logs}/provint.log
+log4j.appender.intlog.datePattern='.'yyyyMMdd
+log4j.appender.intlog.append=true
+log4j.appender.intlog.layout=org.apache.log4j.PatternLayout
+log4j.appender.intlog.layout.ConversionPattern=%d %-5p [%t] - %m%n
+
+#
+# Logger used for policy engine
+#
+log4j.logger.com.att.research.datarouter.authz.impl.ProvAuthorizer=debug, pelog
+log4j.additivity.com.att.research.datarouter.authz.impl.ProvAuthorizer=false
+
+log4j.appender.pelog=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.pelog.file=${DRTR_PROV_LOGS:-/opt/app/datartr/logs}/policyengine.log
+log4j.appender.pelog.datePattern='.'yyyyMMdd
+log4j.appender.pelog.append=true
+log4j.appender.pelog.layout=org.apache.log4j.PatternLayout
+log4j.appender.pelog.layout.ConversionPattern=%d %-5p [%t] - %m%n
+
+#
+# Logger used for Jetty server
+#
+log4j.logger.org.eclipse.jetty=info, jetty
+log4j.additivity.org.eclipse.jetty.server.Server=false
+
+log4j.appender.jetty=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.jetty.file=${DRTR_PROV_LOGS:-/opt/app/datartr/logs}/jetty.log
+log4j.appender.jetty.datePattern='.'yyyyMMdd
+log4j.appender.jetty.append=true
+log4j.appender.jetty.layout=org.apache.log4j.PatternLayout
+log4j.appender.jetty.layout.ConversionPattern=%d %-5p [%t] - %m%n
+!EOF

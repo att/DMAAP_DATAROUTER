@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<descriptor version="1" xmlns="http://aft.att.com/swm/descriptor">
+	<platforms>
+		<platform os="Linux" osVersions="*" architecture="*"/>
+	</platforms>
+	<paths>
+		<path name="/opt/app/datartr" user="datartr" group="datartr" permissions="755,644" recursive="true"/>
+		<path name="/opt/app/platform/init.d/drtrnode" user="datartr" group="datartr" permissions="755"/>
+	</paths>
+	<actions>
+		<action type="INIT">
+			<proc stage="POST" user="datartr" group="datartr"/>
+		</action>
+		<action type="FALL">
+			<proc stage="PRE" user="datartr" group="datartr"/>
+			<proc stage="POST" user="datartr" group="datartr"/>
+		</action>
+		<action type="INST">
+			<proc stage="PRE" user="datartr" group="datartr"/>
+			<proc stage="POST" user="datartr" group="datartr"/>
+		</action>
+		<action type="DINST">
+			<proc stage="PRE" user="datartr" group="datartr"/>
+		</action>
+	</actions>
+	<dependencies>
+		<dependencyFilter componentName="com.att.java:jdk8lin" versions="[1.8.0.77-02]" sequence="1"/>
+		<dependencyFilter componentName="com.att.platform:initd" versions="[1.0.15,)" sequence="2"/>
+		<dependencyFilter componentName="com.att.dmaap.datarouter:util" versions="[1.0.7,)" sequence="3"/>
+	</dependencies>
+</descriptor>

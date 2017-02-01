@@ -1,0 +1,14 @@
+{ 
+                "delivery" :	
+               				
+                { 
+                                "url" : "http://172.18.0.3:7070/", 
+                                "user" : "LOGIN", 
+                                "password" : "PASSWORD", 
+                                "use100" : true 
+                },
+                "metadataOnly" : false, 
+                "suspend" : false, 
+				"groupid" : 29,
+                "subscriber" : "sg481n"
+}

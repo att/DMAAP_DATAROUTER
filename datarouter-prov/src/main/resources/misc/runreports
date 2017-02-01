@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+#                        AT&T - PROPRIETARY
+#          THIS FILE CONTAINS PROPRIETARY INFORMATION OF
+#        AT&T AND IS NOT TO BE DISCLOSED OR USED EXCEPT IN
+#             ACCORDANCE WITH APPLICABLE AGREEMENTS.
+#
+#          Copyright (c) 2013 AT&T Knowledge Ventures
+#              Unpublished and Not for Publication
+#                     All Rights Reserved
+#
+#  This script runs daily to generate reports files in the logs directory.
+#
+#  $Id: runreports,v 1.2 2013/11/06 16:23:54 eby Exp $
+#
+
+umask 0022
+
+JAVA_HOME=/opt/java/jdk/jdk180
+JAVA_OPTS="-Xms1G -Xmx4G"
+JAVA_CLASS=com.att.research.datarouter.reports.Report
+TZ=GMT0
+PATH=$JAVA_HOME/bin:/bin:/usr/bin
+CLASSPATH=`echo /opt/app/datartr/etc /opt/app/datartr/lib/*.jar | tr ' ' ':'`
+LOGDIR=/opt/app/datartr/logs
+YESTERDAY=`/bin/date --date=yesterday '+%Y%m%d'`
+
+export CLASSPATH JAVA_HOME JAVA_OPTS TZ PATH
+
+ID=`id -n -u`
+GRP=`id -n -g`
+if [ "$ID" != "datartr" ]
+then
+	echo runreports must be started as user datartr not $ID
+	exit 1
+fi
+if [ "$GRP" != "datartr" ]
+then
+	echo runreports must be started as group datartr not $GRP
+	exit 1
+fi
+if [ "`pgrep -u mysql mysqld`" = "" ]
+then
+	echo MySQL is not running.  It must be started before runreports
+	exit 1
+fi
+
+# Volume report
+java $JAVA_OPTS $JAVA_CLASS -t volume -o $LOGDIR/volume.csv.$YESTERDAY yesterday </dev/null >/dev/null
+
+# Subscriber report
+java $JAVA_OPTS $JAVA_CLASS -t subscriber -o $LOGDIR/subscriber.csv.$YESTERDAY yesterday </dev/null >/dev/null
+
+exit 0

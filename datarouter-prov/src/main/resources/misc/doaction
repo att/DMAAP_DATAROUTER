@@ -1,0 +1,53 @@
+#!/bin/bash
+
+cd /opt/app/datartr/etc
+for action in "$@"
+do
+case "$action" in
+'stop')
+	/opt/app/platform/init.d/drtrprov stop
+	;;
+'start')
+	/opt/app/platform/init.d/drtrprov start || exit 1
+	;;
+'backup')
+	cp log4j.properties log4j.properties.save 2>/dev/null
+	cp provserver.properties provserver.properties.save 2>/dev/null
+	cp mail.properties mail.properties.save 2>/dev/null
+	cp havecert havecert.save 2>/dev/null
+	cp mysql_init_0001 mysql_init_0001.save 2>/dev/null
+	;;
+'restore')
+	cp log4j.properties.save log4j.properties 2>/dev/null
+	cp provserver.properties.save provserver.properties 2>/dev/null
+	cp mail.properties.save mail.properties 2>/dev/null
+	cp havecert.save havecert 2>/dev/null
+	cp mysql_init_0001.save mysql_init_0001 2>/dev/null
+	;;
+'config')
+	/bin/bash log4j.properties.tmpl >log4j.properties
+	/bin/bash provserver.properties.tmpl >provserver.properties
+	/bin/bash mail.properties.tmpl >mail.properties
+	/bin/bash havecert.tmpl >havecert
+	/bin/bash mysql_init_0001.tmpl >mysql_init_0001
+	echo "$AFTSWM_ACTION_NEW_VERSION" >VERSION.prov
+	chmod +x havecert
+	rm -f /opt/app/platform/rc.d/K90zdrtrprov /opt/app/platform/rc.d/S99zdrtrprov
+	ln -s ../init.d/drtrprov /opt/app/platform/rc.d/K90zdrtrprov
+	ln -s ../init.d/drtrprov /opt/app/platform/rc.d/S99zdrtrprov
+	;;
+'clean')
+	rm -f log4j.properties log4j.properties.save
+	rm -f provserver.properties provserver.properties.save
+	rm -f mail.properties mail.properties.save
+	rm -f havecert havecert.properties.save
+	rm -f mysql_init_0001 mysql_init_0001.save
+	rm -f VERSION.prov
+	rm -f /opt/app/platform/rc.d/K90zdrtrprov /opt/app/platform/rc.d/S99zdrtrprov
+	;;
+*)
+	exit 1
+	;;
+esac
+done
+exit 0

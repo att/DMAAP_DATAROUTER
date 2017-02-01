@@ -1,0 +1,35 @@
+cat <<!EOF
+#
+#                        AT&T - PROPRIETARY
+#          THIS FILE CONTAINS PROPRIETARY INFORMATION OF
+#        AT&T AND IS NOT TO BE DISCLOSED OR USED EXCEPT IN
+#             ACCORDANCE WITH APPLICABLE AGREEMENTS.
+#
+#          Copyright (c) 2013 AT&T Knowledge Ventures
+#              Unpublished and Not for Publication
+#                     All Rights Reserved
+#
+# CVS: $Id: provserver.properties.tmpl,v 1.2 2013/05/14 19:07:47 eby Exp $
+#
+
+# Jetty Server properties
+com.att.research.datarouter.provserver.http.port           = ${DRTR_PROV_INTHTTPPORT:-8080}
+com.att.research.datarouter.provserver.https.port          = ${DRTR_PROV_INTHTTPSPORT:-8443}
+com.att.research.datarouter.provserver.keymanager.password = ${DRTR_PROV_KEYMGRPASS:-changeit}
+com.att.research.datarouter.provserver.keystore.type       = jks
+com.att.research.datarouter.provserver.keystore.path       = ${DRTR_PROV_KSTOREFILE:-/opt/app/datartr/etc/keystore}
+com.att.research.datarouter.provserver.keystore.password   = ${DRTR_PROV_KSTOREPASS:-changeit}
+com.att.research.datarouter.provserver.truststore.path     = ${DRTR_PROV_TSTOREFILE}
+com.att.research.datarouter.provserver.truststore.password = ${DRTR_PROV_TSTOREPASS:-changeit}
+com.att.research.datarouter.provserver.accesslog.dir       = ${DRTR_PROV_LOGS:-/opt/app/datartr/logs}
+com.att.research.datarouter.provserver.spooldir            = ${DRTR_PROV_SPOOL:-/opt/app/datartr/spool}
+com.att.research.datarouter.provserver.dbscripts           = ${DRTR_PROV_DBSCRIPTS:-/opt/app/datartr/etc}
+com.att.research.datarouter.provserver.https.relaxation    = ${DELIVERY_HTTPS_RELAXATION:-false}
+com.att.research.datarouter.provserver.https.relax.notify   = ${DELIVERY_HTTPS_RELAXATION_EMAIL:-DL-DATA-ROUTER-DEV@att.com|DL-DataRTRProdSupport@att.com}
+
+# Database access
+com.att.research.datarouter.db.driver   = com.mysql.jdbc.Driver
+com.att.research.datarouter.db.url      = jdbc:mysql://127.0.0.1:3306/datarouter
+com.att.research.datarouter.db.login    = ${DRTR_PROV_DBLOGIN:-datarouter}
+com.att.research.datarouter.db.password = ${DRTR_PROV_DBPASS:-Datartr1234#}
+!EOF

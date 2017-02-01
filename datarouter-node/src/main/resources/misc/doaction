@@ -1,0 +1,42 @@
+#!/bin/bash
+
+cd /opt/app/datartr/etc
+for action in "$@"
+do
+case "$action" in
+'backup')
+	cp log4j.properties log4j.properties.save 2>/dev/null
+	cp node.properties node.properties.save 2>/dev/null
+	cp havecert havecert.save 2>/dev/null
+	;;
+'stop')
+	/opt/app/platform/init.d/drtrnode stop
+	;;
+'start')
+	/opt/app/platform/init.d/drtrnode start || exit 1
+	;;
+'config')
+	/bin/bash log4j.properties.tmpl >log4j.properties
+	/bin/bash node.properties.tmpl >node.properties
+	/bin/bash havecert.tmpl >havecert
+	echo "$AFTSWM_ACTION_NEW_VERSION" >VERSION.node
+	chmod +x havecert
+	rm -f /opt/app/platform/rc.d/K90drtrnode /opt/app/platform/rc.d/S10drtrnode
+	ln -s ../init.d/drtrnode /opt/app/platform/rc.d/K90drtrnode
+	ln -s ../init.d/drtrnode /opt/app/platform/rc.d/S10drtrnode
+	;;
+'restore')
+	cp log4j.properties.save log4j.properties 2>/dev/null
+	cp node.properties.save node.properties 2>/dev/null
+	cp havecert.save havecert 2>/dev/null
+	;;
+'clean')
+	rm -f log4j.properties node.properties havecert log4j.properties.save node.properties.save havecert.save SHUTDOWN redirections.dat VERSION.node
+	rm -f /opt/app/platform/rc.d/K90drtrnode /opt/app/platform/rc.d/S10drtrnode
+	;;
+*)
+	exit 1
+	;;
+esac
+done
+exit 0

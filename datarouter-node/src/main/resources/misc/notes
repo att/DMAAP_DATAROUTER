@@ -1,0 +1,54 @@
+package notes for com.att.dmaap.datarouter:node
+
+This component is for the Data Router Node software.
+
+The following pre-requisite components should already be present:
+	com.att.aft.swm:swm-cli
+	com.att.aft.swm:swm-node
+	- SWM Variables: AFTSWM_AUTOLINK_PARENTS=/opt/app:/opt/app/workload,/opt/app/aft:/opt/app/workload/aft
+	com.att.platform:uam-auto
+	com.att.java:jdk8lin
+	com.att.platform:initd
+	com.att.platform:port-fwd
+	- SWM Variables: PLATFORM_PORT_FWD=80,8080|443,8443
+	com.att.dmaap.datarouter:util
+
+In a non-production environment, the URL for fetching provisioning data from
+the provisioning server must be overridden.  This can be done by setting a SWM
+variable prior to installing this component.  The production (default) value for
+this variable is:
+	DRTR_PROV_INTURL=https://feeds-drtr.web.att.com/internal/prov
+
+Similarly, the URL for uploading event logs to the log server must be overridden.  This can also be done by setting a SWM variable.  The production (default) value is:
+	DRTR_LOG_URL=https://feeds-drtr.web.att.com/internal/logs
+
+Other SWM variables that can be set are:
+
+DRTR_NODE_INTHTTPPORT (default 8080)
+	The TCP/IP port number the component should listen on for "go fetch"
+	requests from the provisioning server
+DRTR_NODE_INTHTTPSPORT (default 8443)
+	The TCP/IP port number the component should listen on for publish
+	requests from feed publishers and other nodes
+DRTR_NODE_EXTHTTPSPORT (default 443)
+	The TCP/IP port number the component should use for node-to-node
+	transfers and for sending redirect requests back to publishers
+DRTR_NODE_SPOOL (default /opt/app/datartr/spool)
+	The directory where data files should be saved while in transit
+DRTR_NODE_LOGS (default /opt/app/datartr/logs)
+	The directory where log files should be kept
+DRTR_NODE_LOG_RETENTION (default 30)
+	How long a log file is kept before being deleted
+DRTR_NODE_KSTOREFILE (default /opt/app/datartr/etc/keystore)
+	The java keystore file containing the server certificate and private key
+	for this server
+DRTR_NODE_KSTOREPASS (default changeit)
+	The password for the keystore file
+DRTR_NODE_PVTKEYPASS (default changeit)
+	The password for the private key in the keystore file
+DRTR_NODE_TSTOREFILE (by default, use the truststore from the Java JDK)
+	The java keystore file containing the trusted certificate authority
+	certificates
+DRTR_NODE_TSTOREPASS (default changeit)
+	The password for the trust store file.  Only applies if a trust store
+	file is specified.

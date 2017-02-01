@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+#                        AT&T - PROPRIETARY
+#          THIS FILE CONTAINS PROPRIETARY INFORMATION OF
+#        AT&T AND IS NOT TO BE DISCLOSED OR USED EXCEPT IN
+#             ACCORDANCE WITH APPLICABLE AGREEMENTS.
+#
+#          Copyright (c) 2013 AT&T Knowledge Ventures
+#              Unpublished and Not for Publication
+#                     All Rights Reserved
+#
+#  dr-route -- A script to interact with a provisioning server to manage the DR routing tables.
+#
+#  $Id: dr-route,v 1.2 2013/11/06 16:23:54 eby Exp $
+#
+
+JAVA_HOME=/opt/java/jdk/jdk180
+JAVA_OPTS="-Xms1G -Xmx1G"
+TZ=GMT0
+PATH=$JAVA_HOME/bin:/bin:/usr/bin
+CLASSPATH=`echo /opt/app/datartr/etc /opt/app/datartr/lib/*.jar | tr ' ' ':'`
+export CLASSPATH JAVA_HOME JAVA_OPTS TZ PATH
+
+$JAVA_HOME/bin/java \
+	-Dlog4j.configuration=file:///opt/app/datartr/etc/log4j.drroute.properties \
+	com.att.research.datarouter.provisioning.utils.DRRouteCLI $*

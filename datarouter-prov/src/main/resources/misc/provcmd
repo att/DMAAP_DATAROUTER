@@ -1,0 +1,163 @@
+#!/bin/bash
+#
+#                        AT&T - PROPRIETARY
+#          THIS FILE CONTAINS PROPRIETARY INFORMATION OF
+#        AT&T AND IS NOT TO BE DISCLOSED OR USED EXCEPT IN
+#             ACCORDANCE WITH APPLICABLE AGREEMENTS.
+#
+#          Copyright (c) 2013 AT&T Knowledge Ventures
+#              Unpublished and Not for Publication
+#                     All Rights Reserved
+#
+#  provcmd -- A script to interact with a provisioning server to manage the provisioning parameters.
+#     Set $VERBOSE to a non-empty string to see the curl commands as they are executed.
+#
+#  $Id: provcmd,v 1.6 2014/03/31 13:23:33 eby Exp $
+#
+
+PATH=/opt/app/datartr/bin:/bin:/usr/bin:$PATH
+PROVCMD="$0"
+export PATH PROVSRVR PROVCMD NOPROXY
+
+if [ ! -x /usr/bin/curl ]
+then
+	echo provcmd: curl is required for this tool.
+	exit 1
+fi
+optloop=
+while [ -z "$optloop" ]
+do
+	if [ "$1" == '-s' ]
+	then
+		shift
+		PROVSRVR="$1"
+		shift
+	elif [ "$1" == '-v' ]
+	then
+		shift
+		VERBOSE=x
+	elif [ "$1" == '-N' ]
+	then
+		shift
+		NOPROXY='?noproxy=1'
+	else
+		optloop=1
+	fi
+done
+if [ -z "$PROVSRVR" ]
+then
+	echo "provcmd: you need to specify the server, either via the -s option"
+	echo "         or by setting and exporting PROVSRVR"
+	exit 1
+fi
+
+CMD="$1"
+shift
+if [ "$CMD" == 'delete' ]
+then
+	if [ $# -gt 0 ]
+	then
+		for i
+		do
+			[ -n "$VERBOSE" ] && echo curl -4 -k -X DELETE "https://$PROVSRVR/internal/api/$1$NOPROXY"
+			curl -4 -k -X DELETE "https://$PROVSRVR/internal/api/$1$NOPROXY"
+		done
+		exit 0
+	fi
+elif [ "$CMD" == 'create' ]
+then
+	if [ $# -eq 2 ]
+	then
+		# create (with POST), then set the value
+		[ -n "$VERBOSE" ] && echo curl -4 -k -X POST --data '' "https://$PROVSRVR/internal/api/$1$NOPROXY"
+		curl -4 -k -X POST --data '' "https://$PROVSRVR/internal/api/$1$NOPROXY"
+		$PROVCMD set "$1" "$2"
+		exit 0
+	fi
+elif [ "$CMD" == 'get' ]
+then
+	if [ $# -eq 1 ]
+	then
+		# get
+		[ -n "$VERBOSE" ] && echo curl -4 -k "https://$PROVSRVR/internal/api/$1$NOPROXY"
+		curl -4 -k "https://$PROVSRVR/internal/api/$1$NOPROXY" 2>/dev/null | tr '|' '\012' | sort
+		exit 0
+	fi
+elif [ "$CMD" == 'set' ]
+then
+	if [ $# -ge 2 ]
+	then
+		p="$1"
+		shift
+		v=""
+		for i; do [ -n "$v" ] && v="$v|"; v="$v$i"; done
+		# set (with PUT)
+		ue=`urlencode "$v"`
+		NOPROXY=`echo $NOPROXY | tr '?' '&'`
+		[ -n "$VERBOSE" ] && echo curl -4 -k -X PUT "https://$PROVSRVR/internal/api/$p?val=$ue$NOPROXY"
+		curl -4 -k -X PUT "https://$PROVSRVR/internal/api/$p?val=$ue$NOPROXY"
+		exit 0
+	fi
+elif [ "$CMD" == 'append' ]
+then
+	if [ $# -ge 2 ]
+	then
+		p="$1"
+		shift
+		tmp=`curl -4 -k "https://$PROVSRVR/internal/api/$p$NOPROXY" 2>/dev/null`
+		$PROVCMD set "$p" "$tmp" "$@"
+		exit 0
+	fi
+elif [ "$CMD" == 'remove' ]
+then
+	if [ $# -eq 2 ]
+	then
+		p="$1"
+		rm="$2"
+		$PROVCMD get "$p" | grep -v "^$rm\$" > /tmp/pc$$
+		IFS=$'\r\n'
+		$PROVCMD set "$p" `cat /tmp/pc$$`
+		rm /tmp/pc$$
+		exit 0
+	fi
+fi
+
+# Some error somewhere - display usage
+cat <<'EOF'
+usage: provcmd [ -s server ] delete name1 [ name2 ... ]
+       provcmd [ -s server ] get name
+       provcmd [ -s server ] create name value
+       provcmd [ -s server ] set name value1 [ value2 ... ]
+       provcmd [ -s server ] append name value1 [ value2 ... ]
+       provcmd [ -s server ] remove name value
+
+delete - remove the parameters named name1, name2 ...
+get    - displays the parameters' value
+create - creates a new parameter
+set    - sets the value of an existing parameter
+append - appends the value to a list-based parameter
+remove - removes a value from a list based parameter
+
+server - the provisioning server FQDN (feeds-drtr.web.att.com for production)
+
+Standard Parameters Names:
+------------------------------
+ACTIVE_POD
+DELIVERY_INIT_RETRY_INTERVAL
+DELIVERY_MAX_AGE
+DELIVERY_MAX_RETRY_INTERVAL
+DELIVERY_RETRY_RATIO
+LOGROLL_INTERVAL
+NODES
+PROV_ACTIVE_NAME
+PROV_AUTH_ADDRESSES
+PROV_AUTH_SUBJECTS
+PROV_DOMAIN
+PROV_MAXFEED_COUNT
+PROV_MAXSUB_COUNT
+PROV_NAME
+PROV_REQUIRE_CERT
+PROV_REQUIRE_SECURE
+STANDBY_POD
+EOF
+exit 1

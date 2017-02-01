@@ -1,0 +1,11 @@
+#!/bin/bash
+cat <<!EOF
+TZ=GMT0
+cd /opt/app/datartr;
+if [ -f ${DRTR_PROV_KSTOREFILE:-etc/keystore} ]
+then
+	exit 0
+fi
+echo `date '+%F %T,000'` WARN Certificate file "${DRTR_PROV_KSTOREFILE:-etc/keystore}" is missing >>${DRTR_PROV_LOGS:-logs}/provint.log
+exit 1
+!EOF
