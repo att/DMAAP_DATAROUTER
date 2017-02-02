@@ -294,7 +294,7 @@
 				</configuration>
 			</plugin> 
 			
-		<!-- blackduck maven plugin -->
+
 <plugin>
  <groupId>com.blackducksoftware.integration</groupId>
  <artifactId>hub-maven-plugin</artifactId>
@@ -504,9 +504,9 @@
 	</distributionManagement>
 	
 	<scm>
-		<connection>https://github.com/att/AAF.git</connection>
+		<connection>https://github.com/att/DMAAP_DATAROUTER.git</connection>
 		<developerConnection>${project.scm.connection}</developerConnection>
-		<url>http://github.com/att/AAF/tree/master</url>
+		<url>https://github.com/att/DMAAP_DATAROUTER/tree/master</url>
 	</scm>
 	
 </project>
