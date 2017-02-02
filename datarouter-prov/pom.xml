@@ -293,17 +293,6 @@
 					<forceTags>true</forceTags>
 				</configuration>
 			</plugin> 
-<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<formats>
-					<format>html</format>
-					<format>xml</format>
-				  </formats>
-				</configuration>
-			</plugin>
 			
 		<!-- blackduck maven plugin -->
 <plugin>
@@ -428,6 +417,96 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+										<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-javadoc-plugin</artifactId>
+			<configuration>
+			<failOnError>false</failOnError>
+			</configuration>
+			<executions>
+				<execution>
+					<id>attach-javadocs</id>
+					<goals>
+						<goal>jar</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin> 
+	   
+	   
+	       <plugin>
+		      <groupId>org.apache.maven.plugins</groupId>
+		      <artifactId>maven-source-plugin</artifactId>
+		      <version>2.2.1</version>
+		      <executions>
+			<execution>
+			  <id>attach-sources</id>
+			  <goals>
+			    <goal>jar-no-fork</goal>
+			  </goals>
+			</execution>
+		      </executions>
+		    </plugin>
+	
+
+	<plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-gpg-plugin</artifactId>
+	    <version>1.5</version>
+	    <executions>
+		<execution>
+		    <id>sign-artifacts</id>
+		    <phase>verify</phase>
+		    <goals>
+			<goal>sign</goal>
+		    </goals>
+		</execution>
+	    </executions>
+	  </plugin> 
+			
+		<plugin>
+			<groupId>org.sonatype.plugins</groupId>
+			<artifactId>nexus-staging-maven-plugin</artifactId>
+			<version>1.6.7</version>
+			<extensions>true</extensions>
+			<configuration>
+			<serverId>ossrhdme</serverId>
+			<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+			<autoReleaseAfterClose>true</autoReleaseAfterClose>
+			</configuration>
+		</plugin>
+			
+		<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<formats>
+					<format>html</format>
+					<format>xml</format>
+				  </formats>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+	
+	
+<distributionManagement>
+    		<snapshotRepository>
+      			<id>ossrhdme</id>
+      			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    		</snapshotRepository>
+    		<repository>
+      			<id>ossrhdme</id>
+      			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    		</repository>
+	</distributionManagement>
+	
+	<scm>
+		<connection>https://github.com/att/AAF.git</connection>
+		<developerConnection>${project.scm.connection}</developerConnection>
+		<url>http://github.com/att/AAF/tree/master</url>
+	</scm>
+	
 </project>
